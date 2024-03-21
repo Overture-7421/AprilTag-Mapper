@@ -8,6 +8,9 @@
 
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SendableChooser.h>
+#include <frc2/command/Commands.h>
+
+#include "AprilTagMapper2024/AprilTagMapper2024.h"
 
 class Robot : public frc::TimedRobot {
  public:
@@ -23,6 +26,11 @@ class Robot : public frc::TimedRobot {
   void TestPeriodic() override;
   void SimulationInit() override;
   void SimulationPeriodic() override;
+  frc2::CommandPtr MapField();
 
  private:
+  AprilTagMapper2024 mapper {{ {0_m, 0_m, 0.355_m}, {0_deg, -26_deg, 0_deg} }};
+  photon::PhotonCamera camera {"Arducam_OV9281_USB_Camera"};
+
+  frc2::CommandPtr mapFieldCmd = MapField();
 };

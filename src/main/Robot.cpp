@@ -8,34 +8,19 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 
 void Robot::RobotInit() {
+  photon::PhotonCamera::SetVersionCheckEnabled(false);
+  mapper.SetCamera(&camera);
+  frc::SmartDashboard::PutData("Map Field", mapFieldCmd.get());
+  frc::SmartDashboard::PutBoolean("Continue", false); 
 }
 
-/**
- * This function is called every 20 ms, no matter the mode. Use
- * this for items like diagnostics that you want ran during disabled,
- * autonomous, teleoperated and test.
- *
- * <p> This runs after the mode specific periodic functions, but before
- * LiveWindow and SmartDashboard integrated updating.
- */
-void Robot::RobotPeriodic() {}
-
-/**
- * This autonomous (along with the chooser code above) shows how to select
- * between different autonomous modes using the dashboard. The sendable chooser
- * code works with the Java SmartDashboard. If you prefer the LabVIEW Dashboard,
- * remove all of the chooser code and uncomment the GetString line to get the
- * auto name from the text box below the Gyro.
- *
- * You can add additional auto modes by adding additional comparisons to the
- * if-else structure below with additional strings. If using the SendableChooser
- * make sure to add them to the chooser code above as well.
- */
-void Robot::AutonomousInit() {
+void Robot::RobotPeriodic() {
+  frc2::CommandScheduler::GetInstance().Run();
 }
 
-void Robot::AutonomousPeriodic() {
-}
+void Robot::AutonomousInit() {}
+
+void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit() {}
 
@@ -52,6 +37,40 @@ void Robot::TestPeriodic() {}
 void Robot::SimulationInit() {}
 
 void Robot::SimulationPeriodic() {}
+
+
+frc2::CommandPtr ContinueNT() {
+
+  return frc2::cmd::Sequence(
+    frc2::cmd::WaitUntil([] {
+      return frc::SmartDashboard::GetBoolean("Continue", false);
+    }),
+    frc2::cmd::Wait(0.5_s)
+  );
+}
+
+frc2::CommandPtr TakeMapperSnapshot(AprilTagMapper2024* mapper) {
+  return frc2::cmd::RunOnce([=] {
+    mapper->CalculateEmpiricalLocations();
+  });
+}
+
+frc2::CommandPtr GenerateFieldJson(AprilTagMapper2024* mapper) {
+  return frc2::cmd::RunOnce([=] {
+    mapper->GenerateFieldJsonFromEmpiricalLocations("/home/lvuser/7421-field.json");
+  });
+}
+
+frc2::CommandPtr Robot::MapField() {
+  return frc2::cmd::Sequence(
+    frc2::cmd::Print("Aim the camera at the speaker..."),
+    ContinueNT(),
+    frc2::cmd::Print("Taking snapshot..."),
+    TakeMapperSnapshot(&mapper),
+    frc2::cmd::Print("Generating field..."),
+    GenerateFieldJson(&mapper)
+  );
+}
 
 #ifndef RUNNING_FRC_TESTS
 int main() {
