@@ -14,11 +14,30 @@ AprilTagMapper2024::MapResult Error_WrongTargets = {false, "Not seeing the corre
 
 AprilTagMapper2024::AprilTagMapper2024(frc::Transform3d cameraToRobot) {
     this->cameraToRobot = cameraToRobot;
-    theoreticalTagLayout.SetOrigin(frc::AprilTagFieldLayout::OriginPosition::kBlueAllianceWallRightSide);
+    SetAprilTagLayout(frc::LoadAprilTagLayoutField(frc::AprilTagField::k2024Crescendo));
 };
 
 void AprilTagMapper2024::SetCamera(photon::PhotonCamera* camera) {
     this->camera = camera;
+}
+
+void AprilTagMapper2024::SetAprilTagLayout(frc::AprilTagFieldLayout theoreticalTagLayout){
+    this->theoreticalTagLayout = theoreticalTagLayout;
+    theoreticalTagLayout.SetOrigin(frc::AprilTagFieldLayout::OriginPosition::kBlueAllianceWallRightSide);
+
+    this->theoreticalLocations =  {
+    // Blue
+    {7, AprilTagMapper2024Constants::BlueSpeakerWaypointPose - theoreticalTagLayout.GetTagPose(7).value()},
+    {8, AprilTagMapper2024Constants::BlueSpeakerWaypointPose - theoreticalTagLayout.GetTagPose(8).value()},
+    {6, AprilTagMapper2024Constants::BlueAmpWaypointPose - theoreticalTagLayout.GetTagPose(6).value()},
+    {14, AprilTagMapper2024Constants::BlueStageBackWaypointPose - theoreticalTagLayout.GetTagPose(14).value()},
+
+    // Red
+    {4, AprilTagMapper2024Constants::RedSpeakerWaypointPose - theoreticalTagLayout.GetTagPose(4).value()},
+    {3, AprilTagMapper2024Constants::RedSpeakerWaypointPose - theoreticalTagLayout.GetTagPose(3).value()},
+    {5, AprilTagMapper2024Constants::RedAmpWaypointPose - theoreticalTagLayout.GetTagPose(5).value()},
+    {13, AprilTagMapper2024Constants::RedStageBackWaypointPose - theoreticalTagLayout.GetTagPose(13).value()}
+  };
 }
 
 AprilTagMapper2024::MapResult AprilTagMapper2024::CalculateEmpiricalLocations() {
@@ -53,6 +72,11 @@ void AprilTagMapper2024::GenerateFieldJsonFromEmpiricalLocations(std::string jso
 
     // Order tags by id, 1 is index 0
     std::sort(theoreticalAprilTags.begin(), theoreticalAprilTags.end(), [](auto a, auto b) { return a.ID < b.ID;});
+
+    if(empiricalLocations.size() == 0) {
+        std::cout << "ERROR: No tags taken during snapshots..." << std::endl;
+        return;
+    }
 
     for(auto empiricalLocation : empiricalLocations) {
         if(!theoreticalLocations.contains(empiricalLocation.first)){

@@ -26,11 +26,25 @@ class Robot : public frc::TimedRobot {
   void TestPeriodic() override;
   void SimulationInit() override;
   void SimulationPeriodic() override;
-  frc2::CommandPtr MapField();
+  frc2::CommandPtr GenerateFieldJson();
+  frc2::CommandPtr TakeMapperSnapshot();
+
+  frc2::CommandPtr MapFieldBlueSpeaker();
+  frc2::CommandPtr MapFieldBlueStage();
+  frc2::CommandPtr MapFieldRedSpeaker();
+  frc2::CommandPtr MapFieldRedStage();
+
+  frc2::CommandPtr LoadCustomLayout();
 
  private:
-  AprilTagMapper2024 mapper {{ {0_m, 0_m, 0.355_m}, {0_deg, -26_deg, 0_deg} }};
+  AprilTagMapper2024 mapper {{ {0_m, 0_m, 0.77_m}, {0_deg, 0_deg, 0_deg} }};
   photon::PhotonCamera camera {"Arducam_OV9281_USB_Camera"};
 
-  frc2::CommandPtr mapFieldCmd = MapField();
+  frc2::CommandPtr mapBlueSpeakerCmd = MapFieldBlueSpeaker().AndThen(GenerateFieldJson()).IgnoringDisable(true);
+  frc2::CommandPtr mapBlueStageCmd = MapFieldBlueStage().AndThen(GenerateFieldJson()).IgnoringDisable(true);
+  frc2::CommandPtr mapRedSpeakerCmd = MapFieldRedSpeaker().AndThen(GenerateFieldJson()).IgnoringDisable(true);
+  frc2::CommandPtr mapRedStageCmd = MapFieldRedStage().AndThen(GenerateFieldJson()).IgnoringDisable(true);
+  frc2::CommandPtr mapFullFieldCmd = MapFieldBlueSpeaker().AndThen(MapFieldBlueStage()).AndThen(MapFieldRedStage()).AndThen(MapFieldRedSpeaker()).AndThen(GenerateFieldJson()).IgnoringDisable(true);
+
+  frc2::CommandPtr loadCustomTagLayoutCmd = LoadCustomLayout().IgnoringDisable(true);
 };

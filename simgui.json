@@ -1,0 +1,15 @@
+{
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Map Blue Speaker": "Command",
+      "/SmartDashboard/Map Blue Stage": "Command",
+      "/SmartDashboard/Map Full Field": "Command",
+      "/SmartDashboard/Map Red Speaker": "Command",
+      "/SmartDashboard/Map Red Stage": "Command"
+    }
+  },
+  "NetworkTables Info": {
+    "visible": true
+  }
+}

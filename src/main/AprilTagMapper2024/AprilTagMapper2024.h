@@ -22,6 +22,8 @@ class AprilTagMapper2024 {
   
   void SetCamera(photon::PhotonCamera* camera);
 
+  void SetAprilTagLayout(frc::AprilTagFieldLayout theoreticalTagLayout);
+
   MapResult CalculateEmpiricalLocations();
 
   void GenerateFieldJsonFromEmpiricalLocations(std::string jsonTargetPath);
@@ -30,22 +32,8 @@ private:
   photon::PhotonCamera* camera;
 	frc::Transform3d cameraToRobot;
 
-	frc::AprilTagFieldLayout theoreticalTagLayout{ frc::LoadAprilTagLayoutField(frc::AprilTagField::k2024Crescendo) };
+	frc::AprilTagFieldLayout theoreticalTagLayout;
 
-  std::map<int, frc::Transform3d> theoreticalLocations {
-    // Blue
-    {7, AprilTagMapper2024Constants::BlueSpeakerWaypointPose - theoreticalTagLayout.GetTagPose(7).value()},
-    {8, AprilTagMapper2024Constants::BlueSpeakerWaypointPose - theoreticalTagLayout.GetTagPose(8).value()},
-    {6, AprilTagMapper2024Constants::BlueAmpWaypointPose - theoreticalTagLayout.GetTagPose(6).value()},
-    {14, AprilTagMapper2024Constants::BlueStageBackWaypointPose - theoreticalTagLayout.GetTagPose(14).value()},
-
-    // Red
-    {4, AprilTagMapper2024Constants::RedSpeakerWaypointPose - theoreticalTagLayout.GetTagPose(4).value()},
-    {3, AprilTagMapper2024Constants::RedSpeakerWaypointPose - theoreticalTagLayout.GetTagPose(3).value()},
-    {5, AprilTagMapper2024Constants::RedAmpWaypointPose - theoreticalTagLayout.GetTagPose(5).value()},
-    {13, AprilTagMapper2024Constants::RedStageBackWaypointPose - theoreticalTagLayout.GetTagPose(13).value()}
-  };
-
-
+  std::map<int, frc::Transform3d> theoreticalLocations;
   std::map <int, frc::Transform3d> empiricalLocations;
 };
