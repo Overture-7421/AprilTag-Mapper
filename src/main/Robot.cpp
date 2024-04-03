@@ -68,7 +68,10 @@ frc2::CommandPtr Robot::TakeMapperSnapshot() {
   return frc2::cmd::Sequence(
     frc2::cmd::Print("Taking snapshot..."),
     frc2::cmd::RunOnce([&] {
-        mapper.CalculateEmpiricalLocations();
+        auto res = mapper.CalculateEmpiricalLocations();
+        if(!res.succesful) {
+          printf("ERROR: %s\n", res.msg);
+        }
     })
   );
 }

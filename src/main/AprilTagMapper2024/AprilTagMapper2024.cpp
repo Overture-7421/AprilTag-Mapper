@@ -74,7 +74,7 @@ void AprilTagMapper2024::GenerateFieldJsonFromEmpiricalLocations(std::string jso
     std::sort(theoreticalAprilTags.begin(), theoreticalAprilTags.end(), [](auto a, auto b) { return a.ID < b.ID;});
 
     if(empiricalLocations.size() == 0) {
-        std::cout << "ERROR: No tags taken during snapshots..." << std::endl;
+        std::cout << "ERROR: No tags taken during snapshots, check if correct camera is being used..." << std::endl;
         return;
     }
 
