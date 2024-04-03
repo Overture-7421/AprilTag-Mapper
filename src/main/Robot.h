@@ -37,8 +37,8 @@ class Robot : public frc::TimedRobot {
   frc2::CommandPtr LoadCustomLayout();
 
  private:
-  AprilTagMapper2024 mapper {{ {0_m, 0_m, 0.77_m}, {0_deg, 0_deg, 0_deg} }};
-  photon::PhotonCamera camera {"Arducam_OV9281_USB_Camera"};
+  AprilTagMapper2024 mapper {{ {0_m, 0_m, 0.3518230454_m}, {180_deg, -23_deg, 0_deg} }};
+  photon::PhotonCamera camera {"Arducam_OV2311_USB_Camera"};
 
   frc2::CommandPtr mapBlueSpeakerCmd = MapFieldBlueSpeaker().AndThen(GenerateFieldJson()).IgnoringDisable(true);
   frc2::CommandPtr mapBlueStageCmd = MapFieldBlueStage().AndThen(GenerateFieldJson()).IgnoringDisable(true);

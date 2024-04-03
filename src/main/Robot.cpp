@@ -111,7 +111,7 @@ frc2::CommandPtr Robot::MapFieldRedSpeaker() {
 
 frc2::CommandPtr Robot::MapFieldRedStage() {
   return frc2::cmd::Sequence(
-    frc2::cmd::Print("Aim the camera at the red speaker..."),
+    frc2::cmd::Print("Aim the camera at the red stage..."),
     ContinueNT(),
     TakeMapperSnapshot()
   );
