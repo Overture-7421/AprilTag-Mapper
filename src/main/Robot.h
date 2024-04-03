@@ -37,7 +37,7 @@ class Robot : public frc::TimedRobot {
   frc2::CommandPtr LoadCustomLayout();
 
  private:
-  AprilTagMapper2024 mapper {{ {0_m, 0_m, 0.3518230454_m}, {180_deg, -23_deg, 0_deg} }};
+  AprilTagMapper2024 mapper {{ {0_m, 0_m, 0.3518230454_m}, {0_deg, -23_deg, 0_deg} }}; // Alexandra has the same height and pitch as the robot, but its not upside down
   photon::PhotonCamera camera {"Arducam_OV2311_USB_Camera"};
 
   frc2::CommandPtr mapBlueSpeakerCmd = MapFieldBlueSpeaker().AndThen(GenerateFieldJson()).IgnoringDisable(true);
